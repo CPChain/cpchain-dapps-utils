@@ -43,7 +43,7 @@ jobs:
       uses: schneegans/dynamic-badges-action@v1.0.0
       with:
         auth: ${{ secrets.GIST_TOKEN }}
-        gistID: 82e0164b7a7f0e2a044ccc9e17c00af6
+        gistID: 06366dbf3a2e32b6cd670932952dbe3d
         filename: cpchain-dapps-utils__${{ env.BRANCH }}.json
         label: Test Coverage
         message: ${{ env.COVERAGE }}

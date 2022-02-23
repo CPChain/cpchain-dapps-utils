@@ -1,7 +1,7 @@
 # cpchain-dapps-utils
 
 A tool library for creating dapps
-![Test Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/zhangkai-cpchain/82e0164b7a7f0e2a044ccc9e17c00af6/raw/cpchain-dapps-utils__heads_main.json)
+![Test Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/zhangkai-cpchain/06366dbf3a2e32b6cd670932952dbe3d/raw/cpchain-dapps-utils__heads_main.json)
 
 ## Installation and Usage
 
