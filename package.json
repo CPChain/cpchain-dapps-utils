@@ -1,4 +1,6 @@
 {
+    "name": "@cpchain-tools/cpchain-dapps-utils",
+    "version": "0.0.1",
     "scripts": {
         "build": "truffle build",
         "test": "truffle test",
