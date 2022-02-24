@@ -4,9 +4,9 @@
  * @dev admin can disable funtions
  */
 pragma solidity >=0.4.22 <0.9.0;
-import "./Ownable.sol";
+import "../ownership/Claimable.sol";
 
-contract Enable is Ownable {
+contract Enable is Claimable {
     bool public enabled = true; // can functions be called
 
     event EnableStatusChanged(bool indexed enabled);

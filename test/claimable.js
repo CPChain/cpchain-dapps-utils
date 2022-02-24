@@ -1,4 +1,4 @@
-const Example = artifacts.require("OwnerExample");
+const Example = artifacts.require("Example");
 const truffleAssert = require('truffle-assertions');
 
 contract("Test Owner contract", (accounts) => {
@@ -34,18 +34,46 @@ contract("Test Owner contract", (accounts) => {
         } catch (error) {
             assert.ok(error.toString())
         }
+    }) 
+
+    it("should set reserve owner to:" + accounts[1], async () => {
+        const instance = await Example.deployed()
+        await instance.transferOwnership(accounts[1]) 
+        const owner = await instance.owner()
+        assert.equal(owner, accounts[0])
+        const pendingOwner = await instance.pendingOwner()
+        assert.equal(pendingOwner, accounts[1])
     })
 
-    it("should set change owner to:" + accounts[1], async () => {
+    it(`should change owner failed for ${accounts[1]} because resvere owner do not claim ownership`, async () => {
+        try {
+            const instance = await Example.deployed()
+            await instance.transferOwnership(accounts[2], { from: accounts[1] })
+        } catch (error) {
+            assert.ok(error.toString())
+        }
+    })
+
+    it(`should claim ownership failed for ${accounts[2]} because it is not resvere owner `, async () => {
+        try {
+            const instance = await Example.deployed()
+            await instance.claimOwnership({ from: accounts[2] })
+        } catch (error) {
+            assert.ok(error.toString())
+        }
+    })
+
+
+    it("should claim ownership success for:" + accounts[1], async () => {
         const instance = await Example.deployed()
-        const result = await instance.transferOwnership(accounts[1])
+        const result = await instance.claimOwnership({ from: accounts[1] })
+
         truffleAssert.eventEmitted(result, 'OwnershipTransferred', (ev) => {
             return ev.previousOwner === accounts[0] && ev.newOwner === accounts[1]
         });
+
         const owner = await instance.owner()
         assert.equal(owner, accounts[1])
     })
-
-
 
 })
