@@ -18,7 +18,7 @@ contract Claimable is Ownable {
      * @dev Modifier throws if called by any account other than the pendingOwner.
      */
     modifier onlyPendingOwner() {
-        require(msg.sender == pendingOwner);
+        require(msg.sender == pendingOwner,'Pending owner required');
         _;
     }
 
