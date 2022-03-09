@@ -13,14 +13,18 @@ npm install @cpchain-tools/cpchain-dapps-utils
 ### ownership
 
 ```javascript
-import "@cpchain-tools/cpchain-dapps-utils/contracts/ownership/Ownable.sol"
-import "@cpchain-tools/cpchain-dapps-utils/contracts/ownership/Claimable.sol"
-contract Example1 is Ownable {
+import "@cpchain-tools/cpchain-dapps-utils/contracts/ownership/Ownable.sol" 
+contract Example is Ownable {
     function ownerGreet() public view onlyOwner returns (string) {
         return "Hello,Owner";
     }
 }
-contract Example2 is Claimable {
+```
+
+Claimable need next owner send transaction to transfer ownership 
+```javascript
+import "@cpchain-tools/cpchain-dapps-utils/contracts/ownership/Ownable.sol"
+contract Example is Claimable {
     function ownerGreet() public view onlyOwner returns (string) {
         return "Hello,Owner";
     }
