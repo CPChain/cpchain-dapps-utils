@@ -4,9 +4,11 @@
     "scripts": {
         "build": "truffle build",
         "test": "truffle test",
-        "test:coverage": "truffle run coverage"
+        "test:coverage": "truffle run coverage",
+        "release:dapp-test-helpers": "cd test-helpers && npm publish --access public"
     },
     "dependencies": {
+        "chai": "^4.3.6",
         "solidity-coverage": "0.7.16",
         "truffle": "^5.3.2",
         "truffle-assertions": "^0.9.2",
@@ -19,5 +21,11 @@
         "contracts",
         "security",
         "ownership"
-    ]
+    ],
+    "devDependencies": {
+        "@cpchain-tools/dapps-test-helpers": "^0.0.1",
+        "chai-bignumber": "^3.0.0",
+        "chai-bn": "^0.3.1"
+    },
+    "license": "MIT"
 }
