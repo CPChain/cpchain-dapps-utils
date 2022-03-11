@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-interface IToken {
+interface IERC20 {
     /**
      * @dev Returns the amount of tokens in existence.
      */
