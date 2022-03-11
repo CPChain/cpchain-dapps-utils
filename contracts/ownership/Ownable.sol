@@ -9,7 +9,6 @@ pragma solidity >=0.4.22 <0.9.0;
 contract Ownable {
     address public owner;
 
-    event OwnershipRenounced(address indexed previousOwner);
     event OwnershipTransferred(
         address indexed previousOwner,
         address indexed newOwner
@@ -27,7 +26,7 @@ contract Ownable {
      * @dev Throws if called by any account other than the owner.
      */
     modifier onlyOwner() {
-        require(msg.sender == owner,'Owner required');
+        require(msg.sender == owner, "Ownable: caller is not the owner");
         _;
     }
 
@@ -36,15 +35,29 @@ contract Ownable {
      * @param _newOwner The address to transfer ownership to.
      */
     function transferOwnership(address _newOwner) public onlyOwner {
+        require(_newOwner != address(0), "Ownable: new owner is the zero address");
         _transferOwnership(_newOwner);
     }
+
+    /**
+     * @dev Leaves the contract without owner. It will not be possible to call
+     * `onlyOwner` functions anymore. Can only be called by the current owner.
+     *
+     * NOTE: Renouncing ownership will leave the contract without an owner,
+     * thereby removing any functionality that is only available to the owner.
+     */
+    function renounceOwnership() public onlyOwner {
+        _transferOwnership(address(0));
+    }
+
 
     /**
      * @dev Transfers control of the contract to a newOwner.
      * @param _newOwner The address to transfer ownership to.
      */
     function _transferOwnership(address _newOwner) internal {
-        emit OwnershipTransferred(owner, _newOwner);
+        address oldOwner = owner;
         owner = _newOwner;
+        emit OwnershipTransferred(oldOwner, _newOwner);
     }
 }

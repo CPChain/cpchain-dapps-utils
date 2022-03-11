@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "../math/SafeMath.sol";
+import "../utils/math/SafeMath.sol";
 import "./IToken.sol";
 
 /**

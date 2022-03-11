@@ -1,4 +1,5 @@
 const OwnableMock = artifacts.require("./mocks/OwnableMock.sol");
+const { assert } = require("chai");
 const truffleAssert = require("truffle-assertions");
 
 contract("Test Owner contract", (accounts) => {
@@ -32,8 +33,9 @@ contract("Test Owner contract", (accounts) => {
   it(`should greet failed for ${accounts[1]} because it is not owner`, async () => {
     try {
       await instance.ownerGreet({ from: accounts[1] });
+      assert.fail()
     } catch (error) {
-      assert.ok(error.toString());
+      assert.ok(error.toString().includes("Ownable: caller is not the owner"));
     }
   });
 
@@ -44,5 +46,30 @@ contract("Test Owner contract", (accounts) => {
     });
     const owner = await instance.owner();
     assert.equal(owner, accounts[1]);
+    const message = await instance.ownerGreet({from: accounts[1]});
+    assert.equal(message, "Owner");
+    try {
+      await instance.ownerGreet({ from: accounts[0] });
+      assert.fail()
+    } catch (error) {
+      assert.ok(error.toString().includes("Ownable: caller is not the owner"));
+    }
   });
+
+  it("Renounce owner", async ()=> {
+    // set owner to zero
+    try {
+      await instance.transferOwnership('0x0000000000000000000000000000000000000000');
+      assert.fail()
+    } catch(error) {
+      assert.ok(error.toString().includes("Ownable: new owner is the zero address"))
+    }
+    // renounce
+    const tx = await instance.renounceOwnership();
+    truffleAssert.eventEmitted(tx, "OwnershipTransferred", (ev) => {
+      return ev.previousOwner === accounts[0] && ev.newOwner.toString() == '0x0000000000000000000000000000000000000000';
+    });
+    const owner = await instance.owner();
+    assert.equal(owner, '0x0000000000000000000000000000000000000000');
+  })
 });
