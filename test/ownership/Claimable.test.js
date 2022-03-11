@@ -1,11 +1,12 @@
 const ClaimableMock = artifacts.require("./mocks/ClaimableMock.sol");
+const { assert } = require("chai");
 const truffleAssert = require("truffle-assertions");
 
-contract("Test Owner contract", (accounts) => {
+contract("Test Claim contract", (accounts) => {
   let instance;
 
   beforeEach(async () => {
-    instance = await OwnableMock.new();
+    instance = await ClaimableMock.new();
     assert.ok(instance);
   });
 
@@ -32,8 +33,9 @@ contract("Test Owner contract", (accounts) => {
   it(`should greet failed for ${accounts[1]} because it is not owner`, async () => {
     try {
       await instance.ownerGreet({ from: accounts[1] });
+      assert.fail()
     } catch (error) {
-      assert.ok(error.toString());
+      assert.ok(error.toString().includes("Ownable: caller is not the owner"));
     }
   });
 
@@ -48,20 +50,24 @@ contract("Test Owner contract", (accounts) => {
   it(`should change owner failed for ${accounts[1]} because resvere owner do not claim ownership`, async () => {
     try {
       await instance.transferOwnership(accounts[2], { from: accounts[1] });
+      assert.fail()
     } catch (error) {
-      assert.ok(error.toString());
+      assert.ok(error.toString("Ownable: caller is not the owner"));
     }
   });
 
   it(`should claim ownership failed for ${accounts[2]} because it is not resvere owner `, async () => {
+    await instance.transferOwnership(accounts[1]);
     try {
       await instance.claimOwnership({ from: accounts[2] });
+      assert.fail()
     } catch (error) {
-      assert.ok(error.toString());
+      assert.ok(error.toString('Pending owner required'));
     }
   });
 
   it("should claim ownership success for:" + accounts[1], async () => {
+    await instance.transferOwnership(accounts[1]);
     const result = await instance.claimOwnership({ from: accounts[1] });
 
     truffleAssert.eventEmitted(result, "OwnershipTransferred", (ev) => {

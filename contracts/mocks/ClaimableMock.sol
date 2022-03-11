@@ -5,11 +5,11 @@
  */
 pragma solidity >=0.4.22 <0.9.0;
 
-import "../lifecycle/Enable.sol";
+import "../ownership/Claimable.sol";
  
 
-contract ClaimableMock is Enable {
-    function greet() public view onlyEnabled returns (string) {
+contract ClaimableMock is Claimable {
+    function greet() public pure returns (string) {
         return "User";
     }
 
