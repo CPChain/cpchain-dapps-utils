@@ -15,7 +15,7 @@ contract Enable is Claimable {
      * @dev Throws if enanled is false
      */
     modifier onlyEnabled() {
-        require(enabled,'Contract has been disabled by owner');
+        require(enabled, 'Contract has been disabled by owner');
         _;
     }
 

@@ -1,4 +1,5 @@
 const EnableMock = artifacts.require("./mocks/EnableMock.sol");
+const { assert } = require("chai");
 const truffleAssert = require("truffle-assertions");
 
 contract("Test enable", (accounts) => {
@@ -30,10 +31,12 @@ contract("Test enable", (accounts) => {
   });
 
   it(`should greet failed for ${accounts[1]} because contract is disabled`, async () => {
+    await instance.disableContract();
     try {
       await instance.greet({ from: accounts[1] });
+      assert.fail()
     } catch (error) {
-      assert.ok(error.toString());
+      assert.ok(error.toString().includes('Contract has been disabled by owner'));
     }
   });
 
