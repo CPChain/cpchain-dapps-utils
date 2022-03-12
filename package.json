@@ -8,6 +8,7 @@
         "build": "truffle build",
         "test": "truffle test",
         "test:coverage": "truffle run coverage",
+        "release": "npm run release:contracts && npm run release:dapp-test-helpers",
         "release:contracts": "cd contracts && npm publish --access public",
         "release:dapp-test-helpers": "cd test-helpers && npm publish --access public"
     },
