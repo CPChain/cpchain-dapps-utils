@@ -28,7 +28,7 @@
         "ownership"
     ],
     "devDependencies": {
-        "@cpchain-tools/dapps-test-helpers": "^0.0.1",
+        "@cpchain-tools/dapps-test-helpers": "^0.0.2",
         "chai-bignumber": "^3.0.0",
         "chai-bn": "^0.3.1"
     },
