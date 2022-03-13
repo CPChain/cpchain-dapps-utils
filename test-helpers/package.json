@@ -1,6 +1,6 @@
 {
     "name": "@cpchain-tools/dapps-test-helpers",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "scripts": {},
     "dependencies": {
         "@openzeppelin/test-helpers": "^0.5.15",
