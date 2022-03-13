@@ -1,0 +1,113 @@
+#!/usr/bin/env python
+
+import argparse
+import sys
+import os
+import json
+
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+__parent__ = os.path.dirname(__location__)
+
+TEST_HELPERS = 'test-helpers'
+CONSTRACTS = 'contracts'
+ALL = 'all'
+
+dirs_mapping = {
+    TEST_HELPERS: os.path.join(__parent__, 'test-helpers'),
+    CONSTRACTS: os.path.join(__parent__, 'contracts')
+}
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+def info(s, return_str=False):
+    s = f"{bcolors.OKCYAN}{s}{bcolors.ENDC}"
+    if return_str:
+        return s
+    print(s)
+
+def warn(s, return_str=False):
+    s = f"{bcolors.WARNING}{s}{bcolors.ENDC}"
+    if return_str:
+        return s
+    print(s)
+
+def error(s):
+    s = f"{bcolors.FAIL}{s}{bcolors.ENDC}"
+    print(s)
+
+def upgrade(version, type):
+    versions = version.split('.')
+    types = ['major', 'minor', 'patch']
+    if type not in types:
+        raise Exception(f'{type} is invalid')
+    upgrader = lambda versions, index: str(int(versions[index]) + 1)
+    index = types.index(type)
+    versions[index] = upgrader(versions, index)
+    if type == 'minor':
+        versions[2] = '0'
+    if type == 'major':
+        versions[1] = '0'
+        versions[2] = '0'
+    return '.'.join(versions)
+
+def publish(package_dir):
+    # open json
+    package_json_path = os.path.join(package_dir, 'package.json')
+    with open(package_json_path, 'r', encoding='UTF-8') as fr:
+        package_json = json.load(fr)
+    warn(f"You can only upgrade {package_json['name']} in minor or patch now")
+    info(f'Please select which type you want to publish:')
+    allowed = ['minor', 'patch']
+    old = package_json['version']
+    versions = dict()
+    for i in allowed:
+        new_v = upgrade(old, i)
+        versions[i] = new_v
+        info(f'{i.upper()}: {old} -> {new_v}')
+    while True:
+        choice = input(warn(f'Please input[minor|patch]?', return_str=True))
+        if choice in allowed:
+            break
+    target_v = versions[choice]
+    choice = input(info(f'Upgrade {package_json["name"]} to {target_v}?[Y|n]', return_str=True))
+    if choice == 'Y':
+        package_json['version'] = target_v
+        with open(package_json_path, 'w', encoding='UTF-8') as fw:
+            json.dump(package_json, fw, indent=4)
+            fw.write('\n')
+        # npm publish
+        os.chdir(package_dir)
+        npm_cmd = 'npm publish --access public'
+        r = os.system(npm_cmd)
+        if r > 0:
+            error(f'Publish failed, please open {package_json_path}, and execute\n\n{npm_cmd}\n')
+    else:
+        warn('User canceled this operation!')
+
+def main(target):
+    if target == ALL or target == TEST_HELPERS:
+        publish(dirs_mapping[TEST_HELPERS])
+    if target == ALL or target == CONSTRACTS:
+        publish(dirs_mapping[CONSTRACTS])
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(prog="CPChain Contracts Utils",
+        description="A script to release the cpchain-dapps-utils to NPM")
+    parser.add_argument('--target', default=ALL,
+        choices=[TEST_HELPERS, CONSTRACTS, ALL],
+        nargs='+',
+        required=True,
+        help='Specify which target package you want to publish'
+    )
+    args = parser.parse_args()
+    main(args.target[0])
