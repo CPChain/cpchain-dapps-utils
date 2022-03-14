@@ -1,6 +1,5 @@
 const MathMock = artifacts.require('./mocks/MathMock.sol');
-const { expect, BN, expectRevert, constants  } = require('@cpchain-tools/dapps-test-helpers');
-const { MAX_UINT256 } = constants;
+const { expect, BN  } = require('@cpchain-tools/dapps-test-helpers');
 
 contract("MathMock", () => {
   const min = new BN('1234');

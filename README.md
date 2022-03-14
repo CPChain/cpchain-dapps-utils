@@ -8,7 +8,7 @@ A tool library for creating dapps
 
 ```bash
 
-npm install @cpchain-tools/cpchain-dapps-utils
+npm install @cpchain-tools/cpchain-contracts
 
 ```
 
@@ -16,7 +16,7 @@ npm install @cpchain-tools/cpchain-dapps-utils
 
 ```solidity
 
-import "@cpchain-tools/cpchain-dapps-utils/contracts/ownership/Ownable.sol" 
+import "@cpchain-tools/cpchain-contracts/ownership/Ownable.sol" 
 contract Example is Ownable {
     function ownerGreet() public view onlyOwner returns (string) {
         return "Hello,Owner";
@@ -27,9 +27,9 @@ contract Example is Ownable {
 
 Claimable need next owner send transaction to transfer ownership
 
-```javascript
+```solidity
 
-import "@cpchain-tools/cpchain-dapps-utils/contracts/ownership/Ownable.sol"
+import "@cpchain-tools/cpchain-contracts/ownership/Ownable.sol"
 contract Example is Claimable {
     function ownerGreet() public view onlyOwner returns (string) {
         return "Hello,Owner";
@@ -40,9 +40,9 @@ contract Example is Claimable {
 
 ### Lifecycle
 
-```javascript
+```solidity
 
-import "@cpchain-tools/cpchain-dapps-utils/contracts/lifecyle/Enable.sol"
+import "@cpchain-tools/cpchain-contracts/lifecyle/Enable.sol"
 
 contract Example is Enable {
     function enableGreet() public view onlyEnabled returns (string) {
@@ -56,7 +56,45 @@ contract Example is Enable {
 
 ### SafeMath
 
-### Base ERC20
+Arithmetic operations in Solidity wrap on overflow. This can easily result in bugs, because programmers usually assume that an overflow raises an error, which is the standard behavior in high level programming languages. `SafeMath` restores this intuition by reverting the transaction when an operation overflows.
+
+```solidity
+
+pragma solidity ^0.4.24;
+
+import "@cpchain-tools/cpchain-contracts/utils/math/SafeMath.sol";
+
+contract SafeMathMock {
+    function mul(uint256 a, uint256 b) public pure returns (uint256) {
+        return SafeMath.mul(a, b);
+    }
+
+    function div(uint256 a, uint256 b) public pure returns (uint256) {
+        return SafeMath.div(a, b);
+    }
+
+    function sub(uint256 a, uint256 b) public pure returns (uint256) {
+        return SafeMath.sub(a, b);
+    }
+
+    function add(uint256 a, uint256 b) public pure returns (uint256) {
+        return SafeMath.add(a, b);
+    }
+
+    function mod(uint256 a, uint256 b) public pure returns (uint256) {
+        return SafeMath.mod(a, b);
+    }
+}
+
+```
+
+### ERC20
+
+```solidity
+
+
+
+```
 
 ## Building/Testing
 
