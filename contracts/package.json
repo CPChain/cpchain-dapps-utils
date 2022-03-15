@@ -1,6 +1,6 @@
 {
     "name": "@cpchain-tools/cpchain-contracts",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Secure Smart Contract library for Solidity on CPChain network",
     "files": [
         "**/*.sol",
