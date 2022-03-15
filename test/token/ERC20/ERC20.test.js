@@ -298,9 +298,40 @@ contract("ERC20Mock", (accounts) => {
   });
 
   describe('_transfer', async () => {
-    it('Should behave like erc20 for transferring', async ()=> {
-    })
+    it('test transfer internal', async ()=> {
+      const from = initialHolder
+      const to = recipient
+      const amount = initialSupply
 
+      expect(await token.balanceOf(from)).to.be.bignumber.equal(amount);
+      expect(await token.balanceOf(to)).to.be.bignumber.equal('0');
+      
+      const { logs } = await token.transferInternal(from, to, amount);
+
+      expect(await token.balanceOf(from)).to.be.bignumber.equal('0');
+      expect(await token.balanceOf(to)).to.be.bignumber.equal(amount);
+
+      await expectRevert(token.transferInternal(from, to, amount),
+        `ERC20: transfer amount exceeds balance`
+      );
+
+      expectEvent.inLogs(logs, 'Transfer', {
+        from,
+        to,
+        value: amount,
+      });
+
+      await token.transferInternal(to, from, new BN('0'));
+
+      expect(await token.balanceOf(from)).to.be.bignumber.equal('0');
+      expect(await token.balanceOf(to)).to.be.bignumber.equal(amount);
+
+      await expectRevert(token.transferInternal(to, ZERO_ADDRESS, amount),
+        `ERC20: transfer to the zero address`
+      );
+
+    })
+    
     describe('when the sender is the zero address', function () {
       it('reverts', async function () {
         await expectRevert(token.transferInternal(ZERO_ADDRESS, recipient, initialSupply),
@@ -311,6 +342,43 @@ contract("ERC20Mock", (accounts) => {
   });
   
   describe('_approve', function () {
+    const owner = initialHolder
+    const spender = recipient
+    const amount = initialSupply;
+    it('should behave like ERC20 approve', async ()=>{
+      const { logs } = await token.approveInternal(owner, spender, amount);
+      expectEvent.inLogs(logs, 'Approval', {
+        owner: owner,
+        spender: spender,
+        value: amount,
+      });
+
+      await token.approveInternal(owner, spender, amount);
+      expect(await token.allowance(owner, spender)).to.be.bignumber.equal(amount);
+
+      await token.approveInternal(owner, spender, new BN(1));
+      await token.approveInternal(owner, spender, amount);
+      expect(await token.allowance(owner, spender)).to.be.bignumber.equal(amount);
+    })
+    it('when the sender does not have enough balance', async ()=> {
+      const amount1 = amount.addn(1);
+      const { logs } = await token.approveInternal(owner, spender, amount1);
+
+      expectEvent.inLogs(logs, 'Approval', {
+        owner: owner,
+        spender: spender,
+        value: amount1,
+      });
+
+      // when there was no approved amount before
+      await token.approveInternal(owner, spender, amount);
+      expect(await token.allowance(owner, spender)).to.be.bignumber.equal(amount);
+
+      // when the spender had an approved amount
+      await token.approveInternal(owner, spender, new BN(1));
+      await token.approveInternal(owner, spender, amount);
+      expect(await token.allowance(owner, spender)).to.be.bignumber.equal(amount);
+    })
     describe('when the owner is the zero address', function () {
       it('reverts', async function () {
         await expectRevert(token.approveInternal(ZERO_ADDRESS, recipient, initialSupply),
