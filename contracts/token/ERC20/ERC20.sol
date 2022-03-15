@@ -235,8 +235,8 @@ contract ERC20 is IERC20 {
     function _burn(address account, uint256 value) internal {
         require(account != address(0), "ERC20: burn from the zero address");
 
+        _balances[account] = _balances[account].sub(value, "ERC20: burn amount exceeds balance");
         _totalSupply = _totalSupply.sub(value);
-        _balances[account] = _balances[account].sub(value);
         emit Transfer(account, address(0), value);
     }
 
