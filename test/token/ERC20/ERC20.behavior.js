@@ -169,7 +169,7 @@ function shouldBehaveLikeERC20 (token, errorPrefix, initialSupply, initialHolder
 }
 
 function shouldBehaveLikeERC20Transfer (token, errorPrefix, from, to, balance, transfer) {
-  describe('when the recipient is not the zero address', function () {
+  describe('when the recipient is not the zero address', async () => {
     describe('when the sender does not have enough balance', function () {
       const amount = balance.addn(1);
 
