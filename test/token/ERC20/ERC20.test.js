@@ -297,38 +297,26 @@ contract("ERC20Mock", (accounts) => {
     });
   });
 
-  // it('_transfer', async () => {
-  //   console.log('------->>>>>>>0', (await token.balanceOf(initialHolder)).toString())
-  //   shouldBehaveLikeERC20Transfer(token, 'ERC20', initialHolder, recipient, initialSupply, function (from, to, amount) {
-  //     token.balanceOf(from).then(r => {
-  //       console.log('----->>>>>1', r.toString())
-  //     })
-  //     token.balanceOf(to).then(r => {
-  //       console.log('----->>>>>2', r.toString())
-  //     })
-  //     return token.transferInternal(from, to, amount);
-  //   });
+  describe('_transfer', async () => {
+    it('Should behave like erc20 for transferring', async ()=> {
+    })
 
-  //   describe('when the sender is the zero address', function () {
-  //     it('reverts', async function () {
-  //       await expectRevert(token.transferInternal(ZERO_ADDRESS, recipient, initialSupply),
-  //         'ERC20: transfer from the zero address'
-  //       );
-  //     });
-  //   });
-  // });
+    describe('when the sender is the zero address', function () {
+      it('reverts', async function () {
+        await expectRevert(token.transferInternal(ZERO_ADDRESS, recipient, initialSupply),
+          'ERC20: transfer from the zero address'
+        );
+      });
+    });
+  });
   
-    // describe('_approve', function () {
-    //   shouldBehaveLikeERC20Approve(token, 'ERC20', initialHolder, recipient, initialSupply, function (owner, spender, amount) {
-    //     return token.approveInternal(owner, spender, amount);
-    //   });
-  
-    //   describe('when the owner is the zero address', function () {
-    //     it('reverts', async function () {
-    //       await expectRevert(token.approveInternal(ZERO_ADDRESS, recipient, initialSupply),
-    //         'ERC20: approve from the zero address'
-    //       );
-    //     });
-    //   });
-    // });
+  describe('_approve', function () {
+    describe('when the owner is the zero address', function () {
+      it('reverts', async function () {
+        await expectRevert(token.approveInternal(ZERO_ADDRESS, recipient, initialSupply),
+          'ERC20: approve from the zero address'
+        );
+      });
+    });
+  });
 });
