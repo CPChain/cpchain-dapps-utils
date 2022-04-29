@@ -47,10 +47,10 @@ contract Verifiable is IVerifiable {
     }
 
     function validateProof(
-        uint256 card,
         uint256 proof,
+        uint256 key,
         uint256 content
     ) public pure returns (bool) {
-        return (card == uint256(keccak256(abi.encodePacked(proof, content))));
+        return (proof == uint256(keccak256(abi.encodePacked(key, content))));
     }
 }

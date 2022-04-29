@@ -18,7 +18,7 @@ interface IVerifiable {
         uint256 proof,
         uint256 key,
         uint256 content
-    ) public;
+    ) external;
 
     /**
      * @dev validate the proof with key and content
@@ -27,7 +27,7 @@ interface IVerifiable {
         uint256 proof,
         uint256 key,
         uint256 content
-    ) public returns (bool);
+    ) external returns (bool);
 
     /**
      * @dev get the content from contract
@@ -36,8 +36,5 @@ interface IVerifiable {
      *
      * Note if the card is not opened,returns should be zero
      */
-    function viewContent(uint256 proof)
-        public
-        view
-        returns (uint256, uint256);
+    function viewContent(uint256 proof) external view returns (uint256, uint256);
 }
